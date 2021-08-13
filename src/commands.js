@@ -13,7 +13,7 @@ export class InitCalculatorCommand extends Command {
   }
 
   execute() {
-    if (this.action.isOperation) {
+    if (this.action.isOperation && this.action.name) {
       this.calculatorData.visualValue += this.action.symbol
       this.calculatorData.operation = this.action
     } else {
@@ -35,7 +35,11 @@ export class SympleCalculatorCommand extends Command {
       this.calculatorData.hiddenValue = this.action.symbol
       this.calculatorData.operation = { symbol: '', isOperation: false }
       this.calculatorData.output.hideResult()
-    } else {
+    }
+    // else if (this.calculatorData.operation.name === actions.sqrt.name) {
+    //   this.calculatorData.hiddenValue += `Math.sqrt(${this.action.symbol},2)`
+    // }
+    else {
       this.calculatorData.hiddenValue += this.calculatorData.operation.symbol
       this.calculatorData.hiddenValue += this.action.symbol
       this.calculatorData.operation = { symbol: '', isOperation: false }
@@ -61,6 +65,9 @@ export class OperationCalculatorCommand extends Command {
         0,
         this.calculatorData.visualValue.length - 1
       )
+      this.calculatorData.visualValue += this.action.symbol
+    }
+    if (this.calculatorData.operation.name === actions.sqrt.name) {
       this.calculatorData.visualValue += this.action.symbol
     }
     this.calculatorData.operation = this.action
@@ -91,4 +98,12 @@ export class CleanCalculatorCommand extends Command {
     this.calculatorData.output.hideResult()
     console.log(this.calculatorData)
   }
+}
+
+export class SqrtCalculatotCommadn extends Command {
+  constructor(calculatorData, action) {
+    super(calculatorData, action)
+  }
+
+  execute() {}
 }

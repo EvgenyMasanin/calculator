@@ -48,6 +48,10 @@ export class Calculator {
     command.execute()
   }
 
+  sqrt(action) {
+    
+  }
+
   clear(action) {
     const command = new CleanCalculatorCommand(this.clData, action)
     command.execute()

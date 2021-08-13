@@ -81,6 +81,7 @@ body {
   padding: 0 1rem;
   font-size: 26px;
   user-select: auto;
+  cursor: auto;
 }
 
 .field p {

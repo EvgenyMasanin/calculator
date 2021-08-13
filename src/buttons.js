@@ -40,6 +40,7 @@ export const actions = {
   equals: action('=', true, 'equals'),
   comma: action('.', true, 'comma'),
   clear: action('', false, 'clear'),
+  sqrt: action('√', true, 'sqrt'),
   plug: action('#', true, 'plug'),
 }
 
@@ -105,7 +106,7 @@ const buttons = [
   ),
   new Button(
     'calculator__item  hard-opirations',
-    actions.plug,
+    actions.sqrt,
     '<sup>2</sup><i class="fas fa-square-root-alt"></i>'
   ),
   new Button(
