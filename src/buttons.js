@@ -7,10 +7,12 @@ class Button {
 }
 
 export class Action {
-  constructor(symbol, isOperation, name) {
+  constructor(symbol, mathSymbol, isOperation, name, changeable) {
     this.name = name
     this.symbol = symbol
+    this.mathSymbol = mathSymbol
     this.isOperation = isOperation
+    this.changeable = changeable
   }
 
   toString() {
@@ -18,42 +20,60 @@ export class Action {
   }
 }
 
-function action(symbol, isOperation, name) {
-  return new Action(symbol, isOperation, name)
+function action(symbol, mathSymbol, isOperation, name, changeable = false) {
+  return new Action(symbol, mathSymbol, isOperation, name, changeable)
 }
 
 export const actions = {
-  zero: action('0', false, 'zero'),
-  one: action('1', false, 'one'),
-  two: action('2', false, 'two'),
-  three: action('3', false, 'three'),
-  four: action('4', false, 'four'),
-  five: action('5', false, 'five'),
-  six: action('6', false, 'six'),
-  seven: action('7', false, 'seven'),
-  eight: action('8', false, 'eight'),
-  nine: action('9', false, 'nine'),
-  plus: action('+', true, 'plus'),
-  minus: action('-', true, 'minus'),
-  divide: action('/', true, 'divide'),
-  miltiply: action('*', true, 'miltiply'),
-  equals: action('=', true, 'equals'),
-  comma: action('.', true, 'comma'),
-  clear: action('', false, 'clear'),
-  sqrt: action('√', true, 'sqrt'),
-  plug: action('#', true, 'plug'),
+  zero: action('0', '0', false, 'zero'),
+  one: action('1', '1', false, 'one'),
+  two: action('2', '2', false, 'two'),
+  three: action('3', '3', false, 'three'),
+  four: action('4', '4', false, 'four'),
+  five: action('5', '5', false, 'five'),
+  six: action('6', '6', false, 'six'),
+  seven: action('7', '7', false, 'seven'),
+  eight: action('8', '8', false, 'eight'),
+  nine: action('9', '9', false, 'nine'),
+  plus: action('+', '+', true, 'plus', true),
+  minus: action('-', '-', true, 'minus', true),
+  divide: action('/', '/', true, 'divide', true),
+  miltiply: action('*', '*', true, 'miltiply', true),
+  equals: action('=', '=', false, 'equals'),
+  comma: action('.', '.', true, 'comma', true),
+  clear: action('', '', false, 'clear'),
+  sqrt2: action('√', 'Math.sqrt(', false, 'sqrt2'),
+  sqrt3: action('³√', 'Math.cbrt(', false, 'sqrt3'),
+  sqrtY: action('^(1/', '**(1/', true, 'sqrtY'),
+  openBracket: action('(', '(', false, 'openBracket'),
+  closeBracket: action(')', ')', false, 'closeBracket'),
+  powM1: action('^(-1)', '**(-1)', false, 'powM1'),
+  pow2: action('^(2)', '**(2)', false, 'pow2'),
+  pow3: action('^(3)', '**(3)', false, 'pow3'),
+  powY: action('^(', '**(', true, 'powY'),
+  expPow: action('e^(', 'Math.exp(', false, 'expPow'),
+  tenPow: action('10^(', '10**(', false, 'tenPow'),
+  ln: action('ln(', 'Math.log(', false, 'ln'),
+  log10: action('log₁₀(', 'Math.log10(', false, 'log10'),
+  toggle: action('', '', false, 'toggle'),
+  percent: action('', '', false, 'percent'),
+  mr: action('', '', false, 'mr'),
+  mPlus: action('', '', false, 'mPlus'),
+  mMinus: action('', '', false, 'mMinus'),
+  mc: action('', '', false, 'mc'),
+  plug: action('#', '#', true, 'plug'),
 }
 
 const buttons = [
-  new Button('calculator__item hard-opirations', actions.plug, '('),
-  new Button('calculator__item hard-opirations', actions.plug, ')'),
-  new Button('calculator__item hard-opirations', actions.plug, 'mc'),
-  new Button('calculator__item hard-opirations', actions.plug, 'm+'),
-  new Button('calculator__item  hard-opirations', actions.plug, 'm-'),
-  new Button('calculator__item  hard-opirations', actions.plug, 'mr'),
+  new Button('calculator__item hard-opirations', actions.openBracket, '('),
+  new Button('calculator__item hard-opirations', actions.closeBracket, ')'),
+  new Button('calculator__item hard-opirations', actions.mc, 'mc'),
+  new Button('calculator__item hard-opirations', actions.mPlus, 'm+'),
+  new Button('calculator__item  hard-opirations', actions.mMinus, 'm-'),
+  new Button('calculator__item  hard-opirations', actions.mr, 'mr'),
   new Button('calculator__item  hard-opirations', actions.clear, 'AC'),
-  new Button('calculator__item  hard-opirations', actions.plug, '±'),
-  new Button('calculator__item  hard-opirations', actions.plug, '%'),
+  new Button('calculator__item  hard-opirations', actions.toggle, '±'),
+  new Button('calculator__item  hard-opirations', actions.percent, '%'),
   new Button(
     'calculator__item simple-opirations',
     actions.divide,
@@ -67,27 +87,27 @@ const buttons = [
   ),
   new Button(
     'calculator__item  hard-opirations',
-    actions.plug,
+    actions.pow2,
     'x<sup>2</sup>'
   ),
   new Button(
     'calculator__item  hard-opirations',
-    actions.plug,
+    actions.pow3,
     'x<sup>3</sup>'
   ),
   new Button(
     'calculator__item  hard-opirations',
-    actions.plug,
+    actions.powY,
     'x<sup>y</sup>'
   ),
   new Button(
     'calculator__item  hard-opirations',
-    actions.plug,
+    actions.expPow,
     'e<sup>x</sup>'
   ),
   new Button(
     'calculator__item  hard-opirations',
-    actions.plug,
+    actions.tenPow,
     '10<sup>x</sup>'
   ),
   new Button('calculator__item numbers', actions.seven, '7'),
@@ -101,28 +121,28 @@ const buttons = [
 
   new Button(
     'calculator__item  hard-opirations',
-    actions.plug,
+    actions.powM1,
     '<sup>1</sup>/<sub>x</sub>'
   ),
   new Button(
     'calculator__item  hard-opirations',
-    actions.sqrt,
+    actions.sqrt2,
     '<sup>2</sup><i class="fas fa-square-root-alt"></i>'
   ),
   new Button(
     'calculator__item  hard-opirations',
-    actions.plug,
+    actions.sqrt3,
     '<sup>3</sup><i class="fas fa-square-root-alt"></i>'
   ),
   new Button(
     'calculator__item  hard-opirations',
-    actions.plug,
+    actions.sqrtY,
     '<sup>y</sup><i class="fas fa-square-root-alt" ></i>'
   ),
-  new Button('calculator__item hard-opirations', actions.plug, 'ln'),
+  new Button('calculator__item hard-opirations', actions.ln, 'ln'),
   new Button(
     'calculator__item hard-opirations',
-    actions.plug,
+    actions.log10,
     'log<sub>10</sub>'
   ),
   new Button('calculator__item numbers', actions.four, '4'),
