@@ -24,77 +24,60 @@ export class Calculator {
     const initCommand = new InitCalculatorCommand(this.clData, action)
     initCommand.execute()
     console.log(action)
-    this.visualValue = this.clData.visualValue
-    this.result = this.clData.result
-    console.log('result', this.clData.result)
-    console.log('hiddenValue', this.clData.hiddenValue)
+    this.#setValues()
   }
 
   addSymbol(action) {
     const command = new SympleCalculatorCommand(this.clData, action)
     command.execute()
-    this.visualValue = this.clData.visualValue
-    this.result = this.clData.result
-    console.log('result', this.clData.result)
-    console.log('hiddenValue', this.clData.hiddenValue)
+    this.#setValues()
   }
 
   addOperation(action) {
     const command = new OperationCalculatorCommand(this.clData, action)
     command.execute()
-    this.visualValue = this.clData.visualValue
-    this.result = this.clData.result
-    console.log('result', this.clData.result)
-    console.log('hiddenValue', this.clData.hiddenValue)
+    this.#setValues()
   }
 
   equals(action) {
     const command = new EqualsCalculatorCommand(this.clData, action)
     command.execute()
-    this.visualValue = this.clData.visualValue
-    this.result = this.clData.result
-    this.isDivZero = this.clData.isDivZero
+    this.#setValues()
   }
 
   sqrt(action) {
     const command = new SqrtCalculatorCommand(this.clData, action)
     command.execute()
-    this.visualValue = this.clData.visualValue
-    this.result = this.clData.result
-    console.log(this)
+    this.#setValues()
   }
 
   toggle(action) {
     const command = new ToggleCalculatorCommand(this.clData, action)
     command.execute()
-    this.visualValue = this.clData.visualValue
-    this.result = this.clData.result
-    console.log(this)
+    this.#setValues()
   }
 
   percent(action) {
     const command = new PercentCalculatorCommand(this.clData, action)
     command.execute()
-    this.visualValue = this.clData.visualValue
-    this.result = this.clData.result
-    console.log(this)
+    this.#setValues()
   }
 
-  memoryAction(action){
-      const command = new MemoryCalculatorCommand(this.clData, action)
-      command.execute()
-      this.visualValue = this.clData.visualValue
-      this.result = this.clData.result
-      console.log(this)
+  memoryAction(action) {
+    const command = new MemoryCalculatorCommand(this.clData, action)
+    command.execute()
+    this.#setValues()
   }
 
   clear(action) {
     const command = new CleanCalculatorCommand(this.clData, action)
     command.execute()
+    this.#setValues()
+  }
+  #setValues() {
     this.visualValue = this.clData.visualValue
     this.result = this.clData.result
     this.isDivZero = this.clData.isDivZero
-    console.log(this)
   }
 }
 
@@ -133,6 +116,5 @@ class CalculatorData {
     } catch (error) {
       return this.lastResult
     }
-    // return this.hiddenValue === '0' ? 0 : eval(this.hiddenValue)
   }
 }
