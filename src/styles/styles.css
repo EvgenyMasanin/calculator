@@ -61,7 +61,7 @@ body {
 }
 
 .calculator__item:hover .item__content {
-  opacity: 0.8;
+  opacity: 0.6;
 }
 
 .calculator__item:active .item__content {

@@ -1,7 +1,6 @@
 import './styles/styles.css'
 import { actions, HTMLButtons } from './buttons'
-import { Calculator, CalculatorData } from './calculator'
-import { InitCalculatorCommand } from './commands'
+import { Calculator } from './Calculator/Calculator'
 
 class CalculatorControler {
   constructor() {
@@ -9,9 +8,7 @@ class CalculatorControler {
   }
 
   addOperation(action) {
-    console.log(this)
     if (this.calculator.isDivZero) {
-      console.log('cleeeeeeeeeeeeeeeeeeeeeeeear')
       this.calculator.clear(actions[action])
     } else {
       switch (action) {
