@@ -31,14 +31,16 @@ class CalculatorControler {
               this.calculator.toggle(actions[action])
               break
             case actions.mr.name:
+              console.log('read')
               this.calculator.memoryAction(actions[action])
               this.calculator.equals(actions.equals)
               break
             case actions.mc.name:
             case actions.mPlus.name:
             case actions.mMinus.name:
+              console.log(1111111111111111)
               this.calculator.memoryAction(actions[action])
-              this.calculator.clear(actions[action])
+              this.calculator.equals(actions[action])
               break
             case actions.percent.name:
               this.calculator.percent(actions[action])

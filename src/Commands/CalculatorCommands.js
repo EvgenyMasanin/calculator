@@ -144,7 +144,7 @@ export class EqualsCalculatorCommand extends Command {
 
     this.calculatorData.output.showResult()
     this.calculatorData.hiddenValue = this.calculatorData.result.toString()
-    this.calculatorData.operation = this.action
+    this.calculatorData.operation = actions.equals
   }
 }
 
