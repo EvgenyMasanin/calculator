@@ -7,11 +7,11 @@ class Button {
 }
 
 export class Action {
-  constructor(symbol, mathSymbol, isOperation, name, changeable) {
+  constructor(symbol, mathSymbol, operation, name, changeable) {
     this.name = name
     this.symbol = symbol
     this.mathSymbol = mathSymbol
-    this.isOperation = isOperation
+    this.operation = operation
     this.changeable = changeable
   }
 
@@ -20,48 +20,55 @@ export class Action {
   }
 }
 
-function action(symbol, mathSymbol, isOperation, name, changeable = false) {
-  return new Action(symbol, mathSymbol, isOperation, name, changeable)
+function action(symbol, mathSymbol, operation, name, changeable = false) {
+  return new Action(symbol, mathSymbol, operation, name, changeable)
+}
+export const actionTypes = {
+  number: 'number',
+  operation: 'operation',
+  passiveOperation: 'passiveOperation',
+  mathOperation: 'mathOperation',
 }
 
 export const actions = {
-  zero: action('0', '0', false, 'zero'),
-  one: action('1', '1', false, 'one'),
-  two: action('2', '2', false, 'two'),
-  three: action('3', '3', false, 'three'),
-  four: action('4', '4', false, 'four'),
-  five: action('5', '5', false, 'five'),
-  six: action('6', '6', false, 'six'),
-  seven: action('7', '7', false, 'seven'),
-  eight: action('8', '8', false, 'eight'),
-  nine: action('9', '9', false, 'nine'),
-  plus: action('+', '+', true, 'plus', true),
-  minus: action('-', '-', true, 'minus', true),
-  divide: action('/', '/', true, 'divide', true),
-  miltiply: action('*', '*', true, 'miltiply', true),
-  equals: action('=', '=', false, 'equals'),
-  comma: action('.', '.', true, 'comma', true),
-  clear: action('', '', false, 'clear'),
-  sqrt2: action('√', 'Math.sqrt(', false, 'sqrt2'),
-  sqrt3: action('³√', 'Math.cbrt(', false, 'sqrt3'),
-  sqrtY: action('^(1/', '**(1/', true, 'sqrtY'),
-  openBracket: action('(', '(', false, 'openBracket'),
-  closeBracket: action(')', ')', false, 'closeBracket'),
-  powM1: action('^(-1)', '**(-1)', false, 'powM1'),
-  pow2: action('^(2)', '**(2)', false, 'pow2'),
-  pow3: action('^(3)', '**(3)', false, 'pow3'),
-  powY: action('^(', '**(', true, 'powY'),
-  expPow: action('e^(', 'Math.exp(', false, 'expPow'),
-  tenPow: action('10^(', '10**(', false, 'tenPow'),
-  ln: action('ln(', 'Math.log(', false, 'ln'),
-  log10: action('log₁₀(', 'Math.log10(', false, 'log10'),
-  toggle: action('', '', false, 'toggle'),
-  percent: action('', '', false, 'percent'),
-  mr: action('', '', false, 'mr'),
-  mPlus: action('', '', false, 'mPlus'),
-  mMinus: action('', '', false, 'mMinus'),
-  mc: action('', '', false, 'mc'),
-  plug: action('#', '#', true, 'plug'),
+  zero: action('0', '0', actionTypes.number, 'zero'),
+  one: action('1', '1', actionTypes.number, 'one'),
+  two: action('2', '2', actionTypes.number, 'two'),
+  three: action('3', '3', actionTypes.number, 'three'),
+  four: action('4', '4', actionTypes.number, 'four'),
+  five: action('5', '5', actionTypes.number, 'five'),
+  six: action('6', '6', actionTypes.number, 'six'),
+  seven: action('7', '7', actionTypes.number, 'seven'),
+  eight: action('8', '8', actionTypes.number, 'eight'),
+  nine: action('9', '9', actionTypes.number, 'nine'),
+  plus: action('+', '+', actionTypes.operation, 'plus', true),
+  minus: action('-', '-', actionTypes.operation, 'minus', true),
+  divide: action('/', '/', actionTypes.operation, 'divide', true),
+  miltiply: action('*', '*', actionTypes.operation, 'miltiply', true),
+  equals: action('=', '=', actionTypes.passiveOperation, 'equals'),
+  comma: action('.', '.', actionTypes.operation, 'comma', true),
+  clear: action('', '', actionTypes.passiveOperation, 'clear'),
+  sqrt2: action('√', 'Math.sqrt(', actionTypes.mathOperation, 'sqrt2'),
+  sqrt3: action('³√', 'Math.cbrt(', actionTypes.mathOperation, 'sqrt3'),
+  sqrtY: action('^(1/', '**(1/', actionTypes.operation, 'sqrtY'),
+  openBracket: action('(', '(', actionTypes.mathOperation, 'openBracket'),
+  closeBracket: action(')', ')', actionTypes.mathOperation, 'closeBracket'),
+  powM1: action('^(-1)', '**(-1)', actionTypes.operation, 'powM1'),
+  pow2: action('^(2)', '**(2)', actionTypes.operation, 'pow2'),
+  pow3: action('^(3)', '**(3)', actionTypes.operation, 'pow3'),
+  powY: action('^(', '**(', actionTypes.operation, 'powY'),
+  expPow: action('e^(', 'Math.exp(', actionTypes.mathOperation, 'expPow'),
+  tenPow: action('10^(', '10**(', actionTypes.number, 'tenPow'),
+  ln: action('ln(', 'Math.log(', actionTypes.mathOperation, 'ln'),
+  log10: action('log₁₀(', 'Math.log10(', actionTypes.mathOperation, 'log10'),
+  toggle: action('', '', actionTypes.passiveOperation, 'toggle'),
+  percent: action('', '', actionTypes.passiveOperation, 'percent'),
+  mr: action('', '', actionTypes.passiveOperation, 'mr'),
+  mPlus: action('', '', actionTypes.passiveOperation, 'mPlus'),
+  mMinus: action('', '', actionTypes.passiveOperation, 'mMinus'),
+  mc: action('', '', actionTypes.passiveOperation, 'mc'),
+  switch: action('', '', actionTypes.passiveOperation, 'switch'),
+  plug: action('#', '#', '', 'plug'),
 }
 
 const buttons = [
@@ -82,7 +89,7 @@ const buttons = [
 
   new Button(
     'calculator__item  hard-opirations',
-    actions.plug,
+    actions.switch,
     '2<sup>nd</sup>'
   ),
   new Button(
@@ -155,9 +162,9 @@ const buttons = [
   ),
 
   new Button('calculator__item hard-opirations', actions.plug, 'x!'),
-  new Button('calculator__item hard-opirations', actions.plug, 'sin'),
-  new Button('calculator__item hard-opirations', actions.plug, 'cos'),
-  new Button('calculator__item hard-opirations', actions.plug, 'tan'),
+  new Button('calculator__item hard-opirations switch', actions.plug, 'sin'),
+  new Button('calculator__item hard-opirations switch', actions.plug, 'cos'),
+  new Button('calculator__item hard-opirations switch', actions.plug, 'tan'),
   new Button('calculator__item hard-opirations', actions.plug, 'e'),
   new Button('calculator__item hard-opirations', actions.plug, 'EE'),
   new Button('calculator__item numbers', actions.one, '1'),

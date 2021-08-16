@@ -5,10 +5,10 @@ export class CalculatorData {
     this.visualValue = '0'
     this.hiddenValue = '0'
     this.hiddenValueForValidate = '0'
-    this.operation = { symbol: '', isOperation: false, name: '' }
+    this.operation = { symbol: '', operation: '', name: '' }
     this.lastResult = 0
     this.sqrt = false
-    this.isDivZero = false
+    this.isError = false
     this.memory = 0
     this.output = {
       resultField: document.querySelector('#result'),
@@ -31,13 +31,10 @@ export class CalculatorData {
 
     const completedHiddenValue = bracketsAutoComplete(this.hiddenValue)
 
-    console.log(completedHiddenValue)
     try {
-      let result2 = eval(this.hiddenValueForValidate)
-      console.log(result2)
+      const result2 = eval(this.hiddenValueForValidate)
       if (!Number.isFinite(result2) || Number.isNaN(result2)) {
-        console.log('err', completedHiddenValue)
-        this.lastResult = `Error!`
+        this.lastResult = 'Error!'
         return this.lastResult
       }
     } catch (error) {}

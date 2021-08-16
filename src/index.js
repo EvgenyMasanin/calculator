@@ -1,5 +1,5 @@
 import './styles/styles.css'
-import { actions, HTMLButtons } from './buttons'
+import { actions, actionTypes, HTMLButtons } from './buttons'
 import { Calculator } from './Calculator/Calculator'
 
 class CalculatorControler {
@@ -8,53 +8,60 @@ class CalculatorControler {
   }
 
   addOperation(action) {
-    if (this.calculator.isDivZero) {
+    if (this.calculator.isError) {
       this.calculator.clear(actions[action])
+    } else if (action === actions.switch.name) {
+      this.calculator.switch(actions[action])
+    } else if (this.calculator.visualValue === '0') {
+      this.calculator.init(actions[action])
     } else {
-      switch (action) {
-        case actions.toggle.name:
-          this.calculator.toggle(actions[action])
+      switch (actions[action].operation) {
+        case actionTypes.number:
+          this.calculator.addSymbol(actions[action])
           break
-        case actions.mr.name:
-        case actions.mc.name:
-        case actions.mPlus.name:
-        case actions.mMinus.name:
-          this.calculator.memoryAction(actions[action])
-          this.calculator.clear(actions[action])
+        case actionTypes.operation:
+          this.calculator.addOperation(actions[action])
           break
-        case actions.percent.name:
-          this.calculator.percent(actions[action])
+        case actionTypes.mathOperation:
+          this.calculator.addMathOperation(actions[action])
           break
-        case actions.equals.name:
-          this.calculator.equals(actions[action])
-          break
-        case actions.clear.name:
-          this.calculator.clear(actions[action])
-          break
-        default:
-          if (this.calculator.visualValue === '0') {
-            this.calculator.init(actions[action])
-          } else {
-            if (
-              actions.sqrt2.name === action ||
-              actions.sqrt3.name === action
-            ) {
-              this.calculator.sqrt(actions[action])
-            } else if (actions[action].isOperation) {
-              this.calculator.addOperation(actions[action])
-            } else {
-              this.calculator.addSymbol(actions[action])
-            }
+        default: {
+          switch (action) {
+            case actions.toggle.name:
+              this.calculator.toggle(actions[action])
+              break
+            case actions.mr.name:
+              this.calculator.memoryAction(actions[action])
+              this.calculator.equals(actions.equals)
+              break
+            case actions.mc.name:
+            case actions.mPlus.name:
+            case actions.mMinus.name:
+              this.calculator.memoryAction(actions[action])
+              this.calculator.clear(actions[action])
+              break
+            case actions.percent.name:
+              this.calculator.percent(actions[action])
+              break
+            case actions.equals.name:
+              this.calculator.equals(actions[action])
+              break
+            case actions.clear.name:
+              this.calculator.clear(actions[action])
+              break
           }
           break
+        }
       }
     }
-    expression.textContent = this.calculator.visualValue
-    result.textContent = '= ' + this.calculator.result
+    this.calculator.output.resultField.textContent = `= ${this.calculator.result}`
+    this.calculator.output.expressionField.textContent =
+      this.calculator.visualValue
   }
 }
 
 const calculatorControler = new CalculatorControler()
+
 const calculatorBody = document.querySelector('.calculator__body')
 HTMLButtons.forEach((HTMLButton) => {
   calculatorBody.append(HTMLButton)
@@ -62,5 +69,5 @@ HTMLButtons.forEach((HTMLButton) => {
 
 calculatorBody.addEventListener('mousedown', (e) => {
   const action = e.target.dataset.type
-  calculatorControler.addOperation(action)
+  if (action) calculatorControler.addOperation(action)
 })

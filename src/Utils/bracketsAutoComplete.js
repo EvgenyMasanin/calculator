@@ -1,14 +1,14 @@
 export function bracketsAutoComplete(string) {
-  const brakets = string.split('').reduce(
-    (brakets, symbol) => {
-      if (symbol === '(') brakets.open++
-      else if (symbol === ')') brakets.close++
-      return brakets
+  const brackets = string.split('').reduce(
+    (brackets, symbol) => {
+      if (symbol === '(') brackets.open++
+      else if (symbol === ')') brackets.close++
+      return brackets
     },
     { open: 0, close: 0 }
   )
-  if (brakets.open > brakets.close) {
-    string += ')'.repeat(brakets.open - brakets.close)
+  if (brackets.open > brackets.close) {
+    string += ')'.repeat(brackets.open - brackets.close)
   }
 
   return string

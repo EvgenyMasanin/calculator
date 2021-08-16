@@ -1,4 +1,5 @@
-import { actions } from '../buttons'
+import { actions, actionTypes } from '../buttons'
+import { bracketsAutoComplete } from '../Utils/bracketsAutoComplete'
 import { Command } from './Command'
 
 export class InitCalculatorCommand extends Command {
@@ -7,7 +8,9 @@ export class InitCalculatorCommand extends Command {
   }
 
   execute() {
-    console.log('INIT')
+    if (this.action.operation === actionTypes.passiveOperation) {
+      return
+    }
     if (
       this.action.name === actions.sqrt2.name ||
       this.action.name === actions.sqrt3.name ||
@@ -19,14 +22,14 @@ export class InitCalculatorCommand extends Command {
     if (this.action.name.indexOf('pow') >= 0) {
       this.calculatorData.visualValue += this.action.symbol
       this.calculatorData.hiddenValue += this.action.mathSymbol
-    } else if (this.action.isOperation && this.action.name) {
+    } else if (this.action.operation === actionTypes.operation) {
       this.calculatorData.visualValue += this.action.symbol
       this.calculatorData.hiddenValue += this.action.mathSymbol
-      this.calculatorData.operation = this.action
     } else {
       this.calculatorData.visualValue = this.action.symbol
       this.calculatorData.hiddenValue = this.action.mathSymbol
     }
+    this.calculatorData.operation = this.action
   }
 }
 
@@ -36,25 +39,15 @@ export class SympleCalculatorCommand extends Command {
   }
 
   execute() {
-    console.log('SIMPLE')
     this.calculatorData.visualValue += this.action.symbol
     if (this.calculatorData.operation.name === actions.equals.name) {
       this.calculatorData.visualValue = this.action.symbol
       this.calculatorData.hiddenValue = this.action.mathSymbol
-      this.calculatorData.operation = {
-        symbol: '',
-        isOperation: false,
-        name: '',
-      }
       this.calculatorData.output.hideResult()
     } else {
       this.calculatorData.hiddenValue += this.action.mathSymbol
-      this.calculatorData.operation = {
-        symbol: '',
-        isOperation: false,
-        name: '',
-      }
     }
+    this.calculatorData.operation = this.action
   }
 }
 
@@ -64,25 +57,16 @@ export class OperationCalculatorCommand extends Command {
   }
 
   execute() {
-    console.log('OPERATION')
     if (this.calculatorData.sqrt) {
-      console.log(222)
-      this.calculatorData.hiddenValue += `)`
+      this.calculatorData.hiddenValue += ')'
       this.calculatorData.sqrt = false
     }
-    switch (this.calculatorData.operation.name) {
-      case actions.equals.name:
-        this.calculatorData.visualValue = this.calculatorData.hiddenValue
-        this.calculatorData.visualValue += this.action.symbol
-        this.calculatorData.hiddenValue += this.action.mathSymbol
-        this.calculatorData.output.hideResult()
-        break
-      case '':
-        this.calculatorData.visualValue += this.action.symbol
-        this.calculatorData.hiddenValue += this.action.mathSymbol
-        break
-    }
-    if (this.calculatorData.operation.changeable) {
+    if (this.calculatorData.operation.name === actions.equals.name) {
+      this.calculatorData.visualValue = this.calculatorData.hiddenValue
+      this.calculatorData.visualValue += this.action.symbol
+      this.calculatorData.hiddenValue += this.action.mathSymbol
+      this.calculatorData.output.hideResult()
+    } else if (this.calculatorData.operation.changeable) {
       this.calculatorData.visualValue = this.calculatorData.visualValue.slice(
         0,
         this.calculatorData.visualValue.length - 1
@@ -93,11 +77,51 @@ export class OperationCalculatorCommand extends Command {
         this.calculatorData.hiddenValue.length - 1
       )
       this.calculatorData.hiddenValue += this.action.mathSymbol
+    } else {
+      this.calculatorData.visualValue += this.action.symbol
+      this.calculatorData.hiddenValue += this.action.mathSymbol
     }
 
     this.calculatorData.operation = this.action
-    console.log(this.calculatorData.hiddenValue)
   }
+}
+
+export class MathOperationCalculatorCommand extends Command {
+  constructor(calculatorData, action) {
+    super(calculatorData, action)
+  }
+
+  execute() {
+    if (
+      this.action.name === actions.sqrt2.name ||
+      this.action.name === actions.sqrt3.name ||
+      this.action.name === actions.sqrtY.name
+    ) {
+      this.calculatorData.sqrt = true
+    }
+
+    this.calculatorData.visualValue += this.action.symbol
+    if (
+      this.calculatorData.operation.operation === actionTypes.number &&
+      this.action.name !== actions.closeBracket.name
+    ) {
+      this.calculatorData.hiddenValue += '*'
+    }
+    this.calculatorData.hiddenValue += this.action.mathSymbol
+    this.calculatorData.operation = this.action
+
+    if (this.action.name === actions.closeBracket.name) {
+      this.calculatorData.hiddenValue += '*'
+    }
+  }
+}
+
+export class PassiveOperationCalculatorCommand extends Command {
+  constructor(calculatorData, action) {
+    super(calculatorData, action)
+  }
+
+  execute() {}
 }
 
 export class EqualsCalculatorCommand extends Command {
@@ -106,28 +130,17 @@ export class EqualsCalculatorCommand extends Command {
   }
 
   execute() {
-    if (this.calculatorData.result === `You can't divide it by zero!!!`) {
-      this.calculatorData.isDivZero = true
+    if (this.calculatorData.result === 'Error!') {
+      this.calculatorData.isError = true
     }
     if (this.calculatorData.sqrt) {
-      this.calculatorData.hiddenValue += `)`
+      this.calculatorData.hiddenValue += ')'
       this.calculatorData.sqrt = false
     }
 
-    const brakets = this.calculatorData.hiddenValue.split('').reduce(
-      (brakets, symbol) => {
-        if (symbol === '(') brakets.open++
-        else if (symbol === ')') brakets.close++
-        return brakets
-      },
-      { open: 0, close: 0 }
+    this.calculatorData.hiddenValue = bracketsAutoComplete(
+      this.calculatorData.hiddenValue
     )
-    console.log(brakets)
-    if (brakets.open > brakets.close) {
-      this.calculatorData.hiddenValue += ')'.repeat(
-        brakets.open - brakets.close
-      )
-    }
 
     this.calculatorData.output.showResult()
     this.calculatorData.hiddenValue = this.calculatorData.result.toString()
@@ -148,14 +161,9 @@ export class SqrtCalculatorCommand extends Command {
     ) {
       this.calculatorData.sqrt = true
     }
-    console.log(this.action)
     this.calculatorData.visualValue += this.action.symbol
     this.calculatorData.hiddenValue += this.action.mathSymbol
-    this.calculatorData.operation = {
-      symbol: '',
-      isOperation: false,
-      name: '',
-    }
+    // this.calculatorData.operation = this.action
   }
 }
 
@@ -177,8 +185,9 @@ export class PercentCalculatorCommand extends Command {
   }
 
   modify(expression) {
+    let isPercentFrom = true
     let numb = ''
-    let isLastBraket = expression[expression.length - 1] === ')'
+    const isLastBraket = expression[expression.length - 1] === ')'
     if (isLastBraket) expression.splice(expression.length - 1, 1)
     let expressionReversed = expression.reverse()
     for (let i = 0; i < expressionReversed.length; i++) {
@@ -186,25 +195,40 @@ export class PercentCalculatorCommand extends Command {
         !+expressionReversed[i] &&
         expressionReversed[i] !== '.' &&
         expressionReversed[i] !== '0'
-      )
+      ) {
+        if (expressionReversed[i] === '+' || expressionReversed[i] === '-')
+          isPercentFrom = false
         break
+      }
       numb += expressionReversed[i]
     }
-    let length = numb.length
-    let position = expressionReversed.length - 1 - length
+    const { length } = numb
+    const position = expressionReversed.length - 1 - length
     numb = numb.split('').reverse().join('')
-    console.log(numb, length, position)
     if (length) {
       expressionReversed = expressionReversed.reverse()
-      expressionReversed.splice(position + 1, length, numb / 100)
-      expressionReversed = expressionReversed.join('')
-      if (isLastBraket) expressionReversed += ')'
-      console.log(expressionReversed)
-      return expressionReversed
+      if (isPercentFrom) {
+        expressionReversed.splice(position + 1, length, numb / 100)
+        expressionReversed = expressionReversed.join('')
+        if (isLastBraket) expressionReversed += ')'
+        return expressionReversed
+      } else {
+        let hiddenValArr = expressionReversed
+        numb = hiddenValArr.splice(position, length + 1)
+        const hv = hiddenValArr.join('')
+        this.calculatorData.hiddenValue = hv
+        let percent =
+          hv +
+          numb[0] +
+          (this.calculatorData.result * +numb.slice(1).join('')) / 100
+        this.calculatorData.hiddenValue = expressionReversed
+        return percent
+      }
     }
     return expression.reverse().join('')
   }
 }
+
 export class ToggleCalculatorCommand extends Command {
   constructor(calculatorData, action) {
     super(calculatorData, action)
@@ -250,26 +274,52 @@ export class ToggleCalculatorCommand extends Command {
 export class MemoryCalculatorCommand extends Command {
   constructor(calculatorData, action) {
     super(calculatorData, action)
+    this.memorySymbol = document.querySelector('.memory')
+    this.memorySymbol.classList.add('memory-active')
   }
 
   execute() {
     switch (this.action.name) {
       case actions.mr.name:
-        alert(this.calculatorData.memory)
+        this.calculatorData.visualValue = this.calculatorData.memory.toString()
+        this.calculatorData.hiddenValue = this.calculatorData.memory.toString()
         break
       case actions.mc.name:
         this.calculatorData.memory = 0
+        this.memorySymbol.classList.remove('memory-active')
         break
       case actions.mPlus.name:
         this.calculatorData.memory += this.calculatorData.result
+        this.memorySymbol.textContent = `M ${this.calculatorData.memory}`
         break
       case actions.mMinus.name:
         this.calculatorData.memory -= this.calculatorData.result
+        this.memorySymbol.textContent = `M ${this.calculatorData.memory}`
         break
     }
   }
 }
 
+export class SwitchCalculatorCommand extends Command {
+  constructor(calculatorData, action) {
+    super(calculatorData, action)
+    this.items = Array.from(document.querySelectorAll('.switch'))
+  }
+
+  execute() {
+    this.items.forEach((item) => {
+      const itemContent = item.querySelector('.item__content')
+      let { textContent } = itemContent
+      if (itemContent.textContent.indexOf('arc') === 0) {
+        textContent = textContent.split('')
+        textContent.splice(0, 3)
+        itemContent.textContent = textContent.join('')
+      } else {
+        itemContent.textContent = ['arc', ...textContent.split('')].join('')
+      }
+    })
+  }
+}
 export class CleanCalculatorCommand extends Command {
   constructor(calculatorData, action) {
     super(calculatorData, action)
@@ -279,9 +329,8 @@ export class CleanCalculatorCommand extends Command {
     this.calculatorData.visualValue = '0'
     this.calculatorData.hiddenValue = '0'
     this.calculatorData.sqrt = false
-    this.calculatorData.isDivZero = false
-    this.calculatorData.operation = { symbol: '', isOperation: false, name: '' }
+    this.calculatorData.isError = false
+    this.calculatorData.operation = { symbol: '', operation: '', name: '' }
     this.calculatorData.output.hideResult()
-    console.log(this.calculatorData)
   }
 }

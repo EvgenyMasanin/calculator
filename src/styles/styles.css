@@ -25,11 +25,21 @@ body {
   box-shadow: 15px 15px 20px rgba(0, 0, 0, 0.5);
 }
 .calculator__body {
+  position: relative;
   display: grid;
   grid-template-rows: 70px;
   grid-template-columns: 1fr;
   grid-template-columns: repeat(10, 1fr);
   color: white;
+}
+.memory {
+  display: none;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+.memory-active {
+  display: block;
 }
 .calculator__item {
   position: relative;

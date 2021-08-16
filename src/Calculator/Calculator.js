@@ -2,10 +2,13 @@ import {
   CleanCalculatorCommand,
   EqualsCalculatorCommand,
   InitCalculatorCommand,
+  MathOperationCalculatorCommand,
   MemoryCalculatorCommand,
   OperationCalculatorCommand,
+  PassiveOperationCalculatorCommand,
   PercentCalculatorCommand,
   SqrtCalculatorCommand,
+  SwitchCalculatorCommand,
   SympleCalculatorCommand,
   ToggleCalculatorCommand,
 } from '../Commands/CalculatorCommands'
@@ -14,7 +17,6 @@ import { CalculatorData } from './CalculatorData'
 export class Calculator {
   constructor() {
     this.clData = new CalculatorData()
-    window.calc = this.clData
   }
 
   get visualValue() {
@@ -25,15 +27,17 @@ export class Calculator {
     return this.clData.result
   }
 
-  get isDivZero() {
-    return this.clData.isDivZero
+  get isError() {
+    return this.clData.isError
+  }
+
+  get output() {
+    return this.clData.output
   }
 
   init(action) {
-    console.log(action)
     const initCommand = new InitCalculatorCommand(this.clData, action)
     initCommand.execute()
-    console.log(action)
   }
 
   addSymbol(action) {
@@ -43,6 +47,16 @@ export class Calculator {
 
   addOperation(action) {
     const command = new OperationCalculatorCommand(this.clData, action)
+    command.execute()
+  }
+
+  addMathOperation(action) {
+    const command = new MathOperationCalculatorCommand(this.clData, action)
+    command.execute()
+  }
+
+  addPassiveOperation(action) {
+    const command = new PassiveOperationCalculatorCommand(this.clData, action)
     command.execute()
   }
 
@@ -58,6 +72,11 @@ export class Calculator {
 
   toggle(action) {
     const command = new ToggleCalculatorCommand(this.clData, action)
+    command.execute()
+  }
+
+  switch(action) {
+    const command = new SwitchCalculatorCommand(this.clData, action)
     command.execute()
   }
 
