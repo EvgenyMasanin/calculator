@@ -1,4 +1,4 @@
-import { actions, actionTypes } from '../buttons'
+import { actions, actionTypes } from '../Actions/Actions'
 import { bracketsAutoComplete } from '../Utils/bracketsAutoComplete'
 import { Command } from './Command'
 
@@ -13,7 +13,7 @@ export class InitCalculatorCommand extends Command {
     }
     if (
       this.action.name === actions.sqrt2.name ||
-      this.action.name === actions.sqrt3.name ||
+      this.action.name === actions.cbrt3.name ||
       this.action.name === actions.sqrtY.name
     ) {
       this.calculatorData.sqrt = true
@@ -92,9 +92,11 @@ export class MathOperationCalculatorCommand extends Command {
   }
 
   execute() {
+    if (this.calculatorData.operation.name === actions.equals.name)
+      this.calculatorData.output.hideResult()
     if (
       this.action.name === actions.sqrt2.name ||
-      this.action.name === actions.sqrt3.name ||
+      this.action.name === actions.cbrt3.name ||
       this.action.name === actions.sqrtY.name
     ) {
       this.calculatorData.sqrt = true
@@ -102,8 +104,9 @@ export class MathOperationCalculatorCommand extends Command {
 
     this.calculatorData.visualValue += this.action.symbol
     if (
-      this.calculatorData.operation.operation === actionTypes.number &&
-      this.action.name !== actions.closeBracket.name
+      (this.calculatorData.operation.operation === actionTypes.number &&
+        this.action.name !== actions.closeBracket.name) ||
+      this.calculatorData.operation.name === actions.equals.name
     ) {
       this.calculatorData.hiddenValue += '*'
     }
@@ -113,6 +116,7 @@ export class MathOperationCalculatorCommand extends Command {
     if (this.action.name === actions.closeBracket.name) {
       this.calculatorData.hiddenValue += '*'
     }
+    this.calculatorData.operation = this.action
   }
 }
 
@@ -156,7 +160,7 @@ export class SqrtCalculatorCommand extends Command {
   execute() {
     if (
       this.action.name === actions.sqrt2.name ||
-      this.action.name === actions.sqrt3.name ||
+      this.action.name === actions.cbrt3.name ||
       this.action.name === actions.sqrtY.name
     ) {
       this.calculatorData.sqrt = true
@@ -274,8 +278,7 @@ export class ToggleCalculatorCommand extends Command {
 export class MemoryCalculatorCommand extends Command {
   constructor(calculatorData, action) {
     super(calculatorData, action)
-    this.memorySymbol = document.querySelector('.memory')
-    this.memorySymbol.classList.add('memory-active')
+    this.calculatorData.isMemoryOn = true
   }
 
   execute() {
@@ -286,15 +289,13 @@ export class MemoryCalculatorCommand extends Command {
         break
       case actions.mc.name:
         this.calculatorData.memory = 0
-        this.memorySymbol.classList.remove('memory-active')
+        this.calculatorData.isMemoryOn = false
         break
       case actions.mPlus.name:
         this.calculatorData.memory += this.calculatorData.result
-        this.memorySymbol.textContent = `M ${this.calculatorData.memory}`
         break
       case actions.mMinus.name:
         this.calculatorData.memory -= this.calculatorData.result
-        this.memorySymbol.textContent = `M ${this.calculatorData.memory}`
         break
     }
   }
@@ -330,6 +331,7 @@ export class CleanCalculatorCommand extends Command {
     this.calculatorData.hiddenValue = '0'
     this.calculatorData.sqrt = false
     this.calculatorData.isError = false
+    this.calculatorData.lastResult = 0
     this.calculatorData.operation = { symbol: '', operation: '', name: '' }
     this.calculatorData.output.hideResult()
   }

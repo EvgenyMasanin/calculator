@@ -19,6 +19,10 @@ export class Calculator {
     this.clData = new CalculatorData()
   }
 
+  get isMemoryOn() {
+    return this.clData.isMemoryOn
+  }
+
   get visualValue() {
     return this.clData.visualValue
   }

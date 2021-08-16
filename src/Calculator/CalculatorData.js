@@ -10,20 +10,16 @@ export class CalculatorData {
     this.sqrt = false
     this.isError = false
     this.memory = 0
+    this.isMemoryOn = false
     this.output = {
-      resultField: document.querySelector('#result'),
-      expressionField: document.querySelector('#expression'),
+      resultVisible: false,
       showResult() {
-        this.resultField.classList.remove('disable')
-        this.expressionField.classList.add('disable')
+        this.resultVisible = true
       },
       hideResult() {
-        this.resultField.classList.add('disable')
-        this.expressionField.classList.remove('disable')
+        this.resultVisible = false
       },
     }
-    this.output.expressionField.textContent = this.visualValue
-    this.output.resultField.textContent = '= 0'
   }
 
   get result() {

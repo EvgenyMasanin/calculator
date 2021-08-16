@@ -1,10 +1,16 @@
 import './styles/styles.css'
-import { actions, actionTypes, HTMLButtons } from './buttons'
+import { HTMLButtons } from './buttons'
 import { Calculator } from './Calculator/Calculator'
+import { actions, actionTypes } from './Actions/Actions'
 
 class CalculatorControler {
   constructor() {
     this.calculator = new Calculator()
+    this.resultField = document.querySelector('#result')
+    this.expressionField = document.querySelector('#expression')
+    this.memorySymbol = document.querySelector('.memory')
+    this.expressionField.textContent = this.calculator.visualValue
+    this.resultField.textContent = '= 0'
   }
 
   addOperation(action) {
@@ -38,7 +44,6 @@ class CalculatorControler {
             case actions.mc.name:
             case actions.mPlus.name:
             case actions.mMinus.name:
-              console.log(1111111111111111)
               this.calculator.memoryAction(actions[action])
               this.calculator.equals(actions[action])
               break
@@ -56,9 +61,23 @@ class CalculatorControler {
         }
       }
     }
-    this.calculator.output.resultField.textContent = `= ${this.calculator.result}`
-    this.calculator.output.expressionField.textContent =
-      this.calculator.visualValue
+    this.resultField.textContent = `= ${this.calculator.result}`
+    this.expressionField.textContent = this.calculator.visualValue
+    if (this.calculator.output.resultVisible) {
+      this.resultField.classList.remove('disable')
+      this.expressionField.classList.add('disable')
+    } else {
+      this.resultField.classList.add('disable')
+      this.expressionField.classList.remove('disable')
+    }
+
+    if (this.calculator.isMemoryOn) {
+      this.memorySymbol.classList.add('memory-active')
+      this.memorySymbol.textContent = `M ${this.calculator.clData.memory}`
+    } else {
+      this.memorySymbol.classList.remove('memory-active')
+    }
+    console.log(this.calculator.clData)
   }
 }
 
