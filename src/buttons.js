@@ -1,3 +1,5 @@
+import { actions } from "./Actions/Actions"
+
 class Button {
   constructor(className, action, content) {
     this.className = className
@@ -6,54 +8,16 @@ class Button {
   }
 }
 
-export class Action {
-  constructor(symbol, isOperation, name) {
-    this.name = name
-    this.symbol = symbol
-    this.isOperation = isOperation
-  }
-
-  toString() {
-    return this.name
-  }
-}
-
-function action(symbol, isOperation, name) {
-  return new Action(symbol, isOperation, name)
-}
-
-export const actions = {
-  zero: action('0', false, 'zero'),
-  one: action('1', false, 'one'),
-  two: action('2', false, 'two'),
-  three: action('3', false, 'three'),
-  four: action('4', false, 'four'),
-  five: action('5', false, 'five'),
-  six: action('6', false, 'six'),
-  seven: action('7', false, 'seven'),
-  eight: action('8', false, 'eight'),
-  nine: action('9', false, 'nine'),
-  plus: action('+', true, 'plus'),
-  minus: action('-', true, 'minus'),
-  divide: action('/', true, 'divide'),
-  miltiply: action('*', true, 'miltiply'),
-  equals: action('=', true, 'equals'),
-  comma: action('.', true, 'comma'),
-  clear: action('', false, 'clear'),
-  sqrt: action('√', true, 'sqrt'),
-  plug: action('#', true, 'plug'),
-}
-
 const buttons = [
-  new Button('calculator__item hard-opirations', actions.plug, '('),
-  new Button('calculator__item hard-opirations', actions.plug, ')'),
-  new Button('calculator__item hard-opirations', actions.plug, 'mc'),
-  new Button('calculator__item hard-opirations', actions.plug, 'm+'),
-  new Button('calculator__item  hard-opirations', actions.plug, 'm-'),
-  new Button('calculator__item  hard-opirations', actions.plug, 'mr'),
+  new Button('calculator__item hard-opirations', actions.openBracket, '('),
+  new Button('calculator__item hard-opirations', actions.closeBracket, ')'),
+  new Button('calculator__item hard-opirations', actions.mc, 'mc'),
+  new Button('calculator__item hard-opirations', actions.mPlus, 'm+'),
+  new Button('calculator__item  hard-opirations', actions.mMinus, 'm-'),
+  new Button('calculator__item  hard-opirations', actions.mr, 'mr'),
   new Button('calculator__item  hard-opirations', actions.clear, 'AC'),
-  new Button('calculator__item  hard-opirations', actions.plug, '±'),
-  new Button('calculator__item  hard-opirations', actions.plug, '%'),
+  new Button('calculator__item  hard-opirations', actions.toggle, '±'),
+  new Button('calculator__item  hard-opirations', actions.percent, '%'),
   new Button(
     'calculator__item simple-opirations',
     actions.divide,
@@ -62,32 +26,32 @@ const buttons = [
 
   new Button(
     'calculator__item  hard-opirations',
-    actions.plug,
+    actions.switch,
     '2<sup>nd</sup>'
   ),
   new Button(
     'calculator__item  hard-opirations',
-    actions.plug,
+    actions.pow2,
     'x<sup>2</sup>'
   ),
   new Button(
     'calculator__item  hard-opirations',
-    actions.plug,
+    actions.pow3,
     'x<sup>3</sup>'
   ),
   new Button(
     'calculator__item  hard-opirations',
-    actions.plug,
+    actions.powY,
     'x<sup>y</sup>'
   ),
   new Button(
     'calculator__item  hard-opirations',
-    actions.plug,
+    actions.expPow,
     'e<sup>x</sup>'
   ),
   new Button(
     'calculator__item  hard-opirations',
-    actions.plug,
+    actions.tenPow,
     '10<sup>x</sup>'
   ),
   new Button('calculator__item numbers', actions.seven, '7'),
@@ -95,34 +59,34 @@ const buttons = [
   new Button('calculator__item numbers', actions.nine, '9'),
   new Button(
     'calculator__item simple-opirations',
-    actions.miltiply,
+    actions.multiply,
     '<i class="fas fa-times"></i>'
   ),
 
   new Button(
     'calculator__item  hard-opirations',
-    actions.plug,
+    actions.powM1,
     '<sup>1</sup>/<sub>x</sub>'
   ),
   new Button(
     'calculator__item  hard-opirations',
-    actions.sqrt,
+    actions.sqrt2,
     '<sup>2</sup><i class="fas fa-square-root-alt"></i>'
   ),
   new Button(
     'calculator__item  hard-opirations',
-    actions.plug,
+    actions.cbrt3,
     '<sup>3</sup><i class="fas fa-square-root-alt"></i>'
   ),
   new Button(
     'calculator__item  hard-opirations',
-    actions.plug,
+    actions.sqrtY,
     '<sup>y</sup><i class="fas fa-square-root-alt" ></i>'
   ),
-  new Button('calculator__item hard-opirations', actions.plug, 'ln'),
+  new Button('calculator__item hard-opirations', actions.ln, 'ln'),
   new Button(
     'calculator__item hard-opirations',
-    actions.plug,
+    actions.log10,
     'log<sub>10</sub>'
   ),
   new Button('calculator__item numbers', actions.four, '4'),
@@ -135,9 +99,9 @@ const buttons = [
   ),
 
   new Button('calculator__item hard-opirations', actions.plug, 'x!'),
-  new Button('calculator__item hard-opirations', actions.plug, 'sin'),
-  new Button('calculator__item hard-opirations', actions.plug, 'cos'),
-  new Button('calculator__item hard-opirations', actions.plug, 'tan'),
+  new Button('calculator__item hard-opirations switch', actions.plug, 'sin'),
+  new Button('calculator__item hard-opirations switch', actions.plug, 'cos'),
+  new Button('calculator__item hard-opirations switch', actions.plug, 'tan'),
   new Button('calculator__item hard-opirations', actions.plug, 'e'),
   new Button('calculator__item hard-opirations', actions.plug, 'EE'),
   new Button('calculator__item numbers', actions.one, '1'),
@@ -169,7 +133,7 @@ const buttons = [
   ),
 ]
 
-export const HTMLButtons = buttons.map((button) => {
+const HTMLButtons = buttons.map((button) => {
   const HTMLButton = document.createElement('div')
   const content = document.createElement('div')
   const target = document.createElement('div')
@@ -187,3 +151,5 @@ export const HTMLButtons = buttons.map((button) => {
 
   return HTMLButton
 })
+
+export default HTMLButtons
