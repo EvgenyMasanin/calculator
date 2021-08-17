@@ -1,11 +1,8 @@
 import { actions, actionTypes } from '../Actions/Actions'
-import { bracketsAutoComplete } from '../Utils/bracketsAutoComplete'
-import { Command } from './Command'
+import bracketsAutoComplete from '../Utils/bracketsAutoComplete'
+import Command from './Command'
 
 export class InitCalculatorCommand extends Command {
-  constructor(calculatorData, action) {
-    super(calculatorData, action)
-  }
 
   execute() {
     if (this.action.operation === actionTypes.passiveOperation) {
@@ -34,9 +31,6 @@ export class InitCalculatorCommand extends Command {
 }
 
 export class SympleCalculatorCommand extends Command {
-  constructor(calculatorData, action) {
-    super(calculatorData, action)
-  }
 
   execute() {
     this.calculatorData.visualValue += this.action.symbol
@@ -52,9 +46,6 @@ export class SympleCalculatorCommand extends Command {
 }
 
 export class OperationCalculatorCommand extends Command {
-  constructor(calculatorData, action) {
-    super(calculatorData, action)
-  }
 
   execute() {
     if (this.calculatorData.sqrt) {
@@ -87,9 +78,6 @@ export class OperationCalculatorCommand extends Command {
 }
 
 export class MathOperationCalculatorCommand extends Command {
-  constructor(calculatorData, action) {
-    super(calculatorData, action)
-  }
 
   execute() {
     if (this.calculatorData.operation.name === actions.equals.name)
@@ -121,17 +109,12 @@ export class MathOperationCalculatorCommand extends Command {
 }
 
 export class PassiveOperationCalculatorCommand extends Command {
-  constructor(calculatorData, action) {
-    super(calculatorData, action)
-  }
 
-  execute() {}
+  // execute() {
+  // }
 }
 
 export class EqualsCalculatorCommand extends Command {
-  constructor(calculatorData, action) {
-    super(calculatorData, action)
-  }
 
   execute() {
     if (this.calculatorData.result === 'Error!') {
@@ -153,9 +136,6 @@ export class EqualsCalculatorCommand extends Command {
 }
 
 export class SqrtCalculatorCommand extends Command {
-  constructor(calculatorData, action) {
-    super(calculatorData, action)
-  }
 
   execute() {
     if (
@@ -172,9 +152,6 @@ export class SqrtCalculatorCommand extends Command {
 }
 
 export class PercentCalculatorCommand extends Command {
-  constructor(calculatorData, action) {
-    super(calculatorData, action)
-  }
 
   execute() {
     const newHiddenValue = this.modify(
@@ -216,27 +193,24 @@ export class PercentCalculatorCommand extends Command {
         expressionReversed = expressionReversed.join('')
         if (isLastBraket) expressionReversed += ')'
         return expressionReversed
-      } else {
-        let hiddenValArr = expressionReversed
+      } 
+        const hiddenValArr = expressionReversed
         numb = hiddenValArr.splice(position, length + 1)
         const hv = hiddenValArr.join('')
         this.calculatorData.hiddenValue = hv
-        let percent =
+        const percent =
           hv +
           numb[0] +
           (this.calculatorData.result * +numb.slice(1).join('')) / 100
         this.calculatorData.hiddenValue = expressionReversed
         return percent
-      }
+      
     }
     return expression.reverse().join('')
   }
 }
 
 export class ToggleCalculatorCommand extends Command {
-  constructor(calculatorData, action) {
-    super(calculatorData, action)
-  }
 
   execute() {
     const newHiddenValue = this.modify(
@@ -322,9 +296,6 @@ export class SwitchCalculatorCommand extends Command {
   }
 }
 export class CleanCalculatorCommand extends Command {
-  constructor(calculatorData, action) {
-    super(calculatorData, action)
-  }
 
   execute() {
     this.calculatorData.visualValue = '0'

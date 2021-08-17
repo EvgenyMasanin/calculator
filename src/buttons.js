@@ -133,7 +133,7 @@ const buttons = [
   ),
 ]
 
-export const HTMLButtons = buttons.map((button) => {
+const HTMLButtons = buttons.map((button) => {
   const HTMLButton = document.createElement('div')
   const content = document.createElement('div')
   const target = document.createElement('div')
@@ -151,3 +151,5 @@ export const HTMLButtons = buttons.map((button) => {
 
   return HTMLButton
 })
+
+export default HTMLButtons

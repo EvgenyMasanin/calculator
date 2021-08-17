@@ -12,9 +12,9 @@ import {
   SympleCalculatorCommand,
   ToggleCalculatorCommand,
 } from '../Commands/CalculatorCommands'
-import { CalculatorData } from './CalculatorData'
+import CalculatorData from './CalculatorData'
 
-export class Calculator {
+class Calculator {
   constructor() {
     this.clData = new CalculatorData()
   }
@@ -99,3 +99,5 @@ export class Calculator {
     command.execute()
   }
 }
+
+export default Calculator

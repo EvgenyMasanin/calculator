@@ -1,5 +1,6 @@
-export function bracketsAutoComplete(string) {
-  const brackets = string.split('').reduce(
+/* eslint-disable no-param-reassign */
+export default function bracketsAutoComplete(string) {
+  const bracketsCount = string.split('').reduce(
     (brackets, symbol) => {
       if (symbol === '(') brackets.open++
       else if (symbol === ')') brackets.close++
@@ -7,8 +8,8 @@ export function bracketsAutoComplete(string) {
     },
     { open: 0, close: 0 }
   )
-  if (brackets.open > brackets.close) {
-    string += ')'.repeat(brackets.open - brackets.close)
+  if (bracketsCount.open > bracketsCount.close) {
+    string += ')'.repeat(bracketsCount.open - bracketsCount.close)
   }
 
   return string

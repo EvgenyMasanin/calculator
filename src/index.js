@@ -1,6 +1,6 @@
 import './styles/styles.css'
-import { HTMLButtons } from './buttons'
-import { Calculator } from './Calculator/Calculator'
+import HTMLButtons from './buttons'
+import Calculator from './Calculator/Calculator'
 import { actions, actionTypes } from './Actions/Actions'
 
 class CalculatorControler {
@@ -37,7 +37,6 @@ class CalculatorControler {
               this.calculator.toggle(actions[action])
               break
             case actions.mr.name:
-              console.log('read')
               this.calculator.memoryAction(actions[action])
               this.calculator.equals(actions.equals)
               break
@@ -77,7 +76,6 @@ class CalculatorControler {
     } else {
       this.memorySymbol.classList.remove('memory-active')
     }
-    console.log(this.calculator.clData)
   }
 }
 

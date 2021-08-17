@@ -1,6 +1,6 @@
-import { bracketsAutoComplete } from '../Utils/bracketsAutoComplete'
+import bracketsAutoComplete from '../Utils/bracketsAutoComplete'
 
-export class CalculatorData {
+export default class CalculatorData {
   constructor() {
     this.visualValue = '0'
     this.hiddenValue = '0'
@@ -33,6 +33,7 @@ export class CalculatorData {
         this.lastResult = 'Error!'
         return this.lastResult
       }
+    // eslint-disable-next-line no-empty
     } catch (error) {}
 
     try {

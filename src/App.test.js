@@ -1,5 +1,6 @@
-import { actions, actionTypes } from './Actions/Actions'
-import { Calculator } from './Calculator/Calculator'
+/* eslint-disable no-undef */
+import { actions } from './Actions/Actions'
+import Calculator from './Calculator/Calculator'
 
 const calculator = new Calculator()
 describe('numbers', () => {
